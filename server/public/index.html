@@ -13,33 +13,32 @@
 <body>
   <div class="container">
     <h1 class="pt-5">Mini Blogr</h1>
-    <div class="row">
+    <div class="row mb-5">
       <div class="col-sm-8">
         <!-- This will eventually be created dynamically -->
-        <form onsubmit="" class="mb-5">
+        <!-- <form onsubmit="" class="mb-5">
           <label for="add-title" class="form-label">Blog Title</label>
           <input type="text" class="form-control" id="add-title" placeholder="Enter Blog Title" name="add-title">
           <label for="blog-body" class="form-label">New Post</label>
-          <!-- <input type="text" class="form-control" id="blog-body" placeholder="Enter your thoughts . . . ☁️" name="blog-body"> -->
           <textarea class="form-control mb-3" rows="5" id="blog-body" name="blog-body" placeholder="Enter your thoughts . . . ☁️"></textarea>
           <button type="submit" class="btn btn-outline-success">Post</button>
-        </form>
+        </form> -->
       </div>
-      <div class="col-sm-4">
+      <div class="col-sm-4 p-0">
         <!-- This button will toggle to a 'cancel' button, and should trigger a pop up asking if you really want to cancel. -->
-        <button class="btn btn-outline-success">Write</button>
+        <button class="btn btn-outline-success" id="write-btn">Write</button>
       </div>
     </div>
     <div class="row">
       <div class="col-sm-8">
         <div>
-          <h5 id="showing">Recent Posts</h5>
+          <h5 id="showing">Featured Post</h5>
         </div>
       </div>
       <div class="col-sm-4 border rounded">
-        <div>
+        <div class="">
           <h5 class="pt-3">Posts</h5>
-          <div id="post-list">
+          <div id="post-list" class="p-3">
             <p>Nothing here, yet! ✏️</p>
           </div>
         </div>
