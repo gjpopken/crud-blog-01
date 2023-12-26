@@ -2,6 +2,7 @@
 function onStart() {
     console.log('hello world');
     renderPostList()
+    renderFeatured()
 }
 
 // ! Handle Functions
@@ -58,6 +59,7 @@ function handleNewPost(event) {
         btn.classList.remove('btn-outline-danger')
         btn.classList.add('btn-outline-success')
         renderPostList()
+        renderFeatured()
     }).catch((err) => {
         console.log(err);
     })
@@ -96,5 +98,24 @@ function renderPostList() {
     })
 }
 
+function renderFeatured() {
+    const container = document.getElementById('current-post')
+
+    axios({
+        method: "GET",
+        url: "/blog/featured"
+    }).then((response) => {
+        const featured = response.data[0]
+        const header = document.getElementById('showing')
+        header.innerText = 'Featured Post'
+        container.innerHTML = `
+        <h2>${featured.title}</h2>
+        <small>${featured.inserted_at}</small>
+        <p>${featured.body}</p>
+        `
+    })
+}
+
+// ! State
 onStart()
 let writeMode = false

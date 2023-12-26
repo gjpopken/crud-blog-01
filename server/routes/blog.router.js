@@ -25,6 +25,7 @@ router.get('/featured', (req, res) => {
     SELECT * FROM "blogs" ORDER BY "id" DESC LIMIT 1;`
     pool.query(queryText)
         .then((result) => {
+            formatDate(result.rows)
             res.send(result.rows)
         })
         .catch((err) => {
