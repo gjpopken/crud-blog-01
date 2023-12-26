@@ -7,7 +7,7 @@ const router = express.Router();
 // GET /blog - - - - - - - Respond with all the blogs.
 router.get('/', (req, res) => {
     const queryText = `
-    SELECT * FROM "blogs";`
+    SELECT * FROM "blogs" ORDER BY "id" DESC;`
     pool.query(queryText)
         .then((result) => {
             res.send(result.rows)
@@ -31,6 +31,21 @@ router.get('/featured', (req, res) => {
 })
 
 // POST /blog - - - - - -  Create one thing.
+router.post('/', (req, res) => {
+    console.log(req.body);
+    const queryText = `
+    INSERT INTO "blogs" ("title", "body")
+    VALUES ($1, $2);
+    `
+    const queryParams = [req.body.title, req.body.body]
+    pool.query(queryText, queryParams)
+        .then((result) => {
+            res.sendStatus(201)
+        })
+        .catch((err) => {
+            console.log(err);
+        })
+})
 
 // DELETE /blog/:id - - -  Delete one thing.
 
