@@ -14,7 +14,7 @@
   <div class="container">
     <h1 class="pt-5">Mini Blogr</h1>
     <div class="row mb-5">
-      <div class="col-sm-8">
+      <div class="col-sm-8" id="new-blog-container">
         <!-- This will eventually be created dynamically -->
         <!-- <form onsubmit="" class="mb-5">
           <label for="add-title" class="form-label">Blog Title</label>
@@ -26,7 +26,7 @@
       </div>
       <div class="col-sm-4 p-0">
         <!-- This button will toggle to a 'cancel' button, and should trigger a pop up asking if you really want to cancel. -->
-        <button class="btn btn-outline-success" id="write-btn">Write</button>
+        <button class="btn btn-outline-success" id="write-btn" onclick="handleWriteBtn()">Write</button>
       </div>
     </div>
     <div class="row">
