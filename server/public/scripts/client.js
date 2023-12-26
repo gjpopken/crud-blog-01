@@ -1,5 +1,7 @@
+
 function onStart() {
     console.log('hello world');
+    renderPostList()
 }
 
 // ! Handle Functions
@@ -8,7 +10,7 @@ function handleWriteBtn() {
     // Get the button, and container that the form will be populated in 
     let btn = document.getElementById('write-btn')
     const container = document.getElementById('new-blog-container')
-    const form = `<form onsubmit="" class="mb-5">
+    const form = `<form onsubmit="handleNewPost(event)" class="mb-5">
     <label for="add-title" class="form-label">Blog Title</label>
     <input type="text" class="form-control" id="add-title" placeholder="Enter Blog Title" name="add-title">
     <label for="blog-body" class="form-label">New Post</label>
@@ -30,6 +32,68 @@ function handleWriteBtn() {
         btn.classList.remove('btn-outline-danger')
         btn.classList.add('btn-outline-success')
     }
+}
+
+function handleNewPost(event) {
+    event.preventDefault()
+    const nTitle = document.getElementById('add-title')
+    const nBody = document.getElementById('blog-body')
+    let btn = document.getElementById('write-btn')
+    const container = document.getElementById('new-blog-container')
+
+    axios({
+        method: "POST",
+        url: '/blog',
+        data: {
+            title: nTitle.value,
+            body: nBody.value
+        }
+    }).then((response) => {
+        console.log('successfully POSTed');
+        nTitle.value = ''
+        nBody.value = ''
+        writeMode = false
+        container.innerHTML = ''
+        btn.innerText = 'Write'
+        btn.classList.remove('btn-outline-danger')
+        btn.classList.add('btn-outline-success')
+        renderPostList()
+    }).catch((err) => {
+        console.log(err);
+    })
+}
+
+// ! Render
+
+function renderPostList() {
+    // to render the post titles to the side bar to be nagivated to
+    axios({
+        method: "GET",
+        url: "/blog"
+    }).then((response) => {
+        console.log(response.data);
+        const container = document.getElementById('post-list')
+        let blogPosts = response.data
+        container.innerHTML = ''
+        if (blogPosts.length === 0) {
+            container.innerHTML = `Nothing here, yet! ✏️`
+        }
+        for (post of blogPosts) {
+            container.innerHTML += `
+            <div class="row"
+                <div class="col">
+                 <button class="btn">${post.title}</button>
+                </div>
+                <div class="col">
+                 <span>${post.inserted_at}</span>
+                </div>
+            </div>
+            <div class="line"></div>
+            `
+        }
+    }).catch((err) => {
+        console.log(err);
+    })
 }
 
 onStart()
