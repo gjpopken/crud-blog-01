@@ -33,7 +33,6 @@ function handleDiscardPost() {
     let btn = document.getElementById('write-btn')
     const container = document.getElementById('new-blog-container')
     if (writeMode === true) {
-        // Todo Triggers the pop-up to make sure that you want to cancel
         writeMode = false
         container.innerHTML = ''
         btn.innerText = 'Write'
@@ -67,10 +66,29 @@ function handleNewPost(event) {
         btn.innerText = 'Write'
         btn.classList.remove('btn-outline-danger')
         btn.classList.add('btn-outline-success')
+        btn.setAttribute('data-bs-toggle', '')
+        btn.setAttribute('data-bs-target', '')
         renderPostList()
         renderFeatured()
     }).catch((err) => {
         console.log(err);
+    })
+}
+
+function handleShowPost(id) {
+    console.log('in show post', id);
+    axios({
+        method: "GET",
+        url: `/blog/now/${id}`
+    }).then((response) => {
+        const showing = document.getElementById('showing')
+        const container = document.getElementById('current-post')
+        const post = response.data[0]
+        showing.innerText = post.inserted_at
+        container.innerHTML = `
+        <h2>${post.title}</h2>
+        <p>${post.body}</p>
+        `
     })
 }
 
@@ -93,10 +111,7 @@ function renderPostList() {
             container.innerHTML += `
             <div class="row"
                 <div class="col">
-                 <button class="btn">${post.title}</button>
-                </div>
-                <div class="col">
-                 <span>${post.inserted_at}</span>
+                 <button class="btn" onclick="handleShowPost(${post.id})">${post.title}<span> ${post.inserted_at}</span></button>
                 </div>
             </div>
             <div class="line"></div>
@@ -112,8 +127,9 @@ function renderFeatured() {
 
     axios({
         method: "GET",
-        url: "/blog/featured"
+        url: "blog/featured"
     }).then((response) => {
+        console.log('GOT for /featured', response.data);
         const featured = response.data[0]
         const header = document.getElementById('showing')
         header.innerText = 'Featured Post'
