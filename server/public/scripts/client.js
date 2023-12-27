@@ -66,6 +66,8 @@ function handleNewPost(event) {
         btn.innerText = 'Write'
         btn.classList.remove('btn-outline-danger')
         btn.classList.add('btn-outline-success')
+        btn.setAttribute('data-bs-toggle', '')
+        btn.setAttribute('data-bs-target', '')
         renderPostList()
         renderFeatured()
     }).catch((err) => {
@@ -75,9 +77,19 @@ function handleNewPost(event) {
 
 function handleShowPost(id) {
     console.log('in show post', id);
-    // axios({
-    //     method: ""
-    // })
+    axios({
+        method: "GET",
+        url: `/blog/now/${id}`
+    }).then((response) => {
+        const showing = document.getElementById('showing')
+        const container = document.getElementById('current-post')
+        const post = response.data[0]
+        showing.innerText = post.inserted_at
+        container.innerHTML = `
+        <h2>${post.title}</h2>
+        <p>${post.body}</p>
+        `
+    })
 }
 
 // ! Render
@@ -115,8 +127,9 @@ function renderFeatured() {
 
     axios({
         method: "GET",
-        url: "/blog/featured"
+        url: "blog/featured"
     }).then((response) => {
+        console.log('GOT for /featured', response.data);
         const featured = response.data[0]
         const header = document.getElementById('showing')
         header.innerText = 'Featured Post'

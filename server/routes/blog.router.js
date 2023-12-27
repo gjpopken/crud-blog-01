@@ -21,8 +21,17 @@ router.get('/', (req, res) => {
 })
 
 // GET /blog/:id - - - - - Respond with one thing.
-router.get('/:id', (req, res) => {
-    
+router.get('/now/:id', (req, res) => {
+    const queryText = `
+    SELECT * FROM "blogs" WHERE "id" = $1;
+    `
+    pool.query(queryText, [req.params.id])
+        .then((result) => {
+            formatDate(result.rows)
+            res.send(result.rows)
+        }).catch((err) => {
+            console.log(err);
+        })
 })
 
 router.get('/featured', (req, res) => {
