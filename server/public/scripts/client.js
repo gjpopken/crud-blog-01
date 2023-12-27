@@ -1,4 +1,3 @@
-
 function onStart() {
     console.log('hello world');
     renderPostList()
@@ -58,7 +57,7 @@ function handleNewPost(event) {
             body: nBody.value
         }
     }).then((response) => {
-        console.log('successfully POSTed');
+        // console.log('successfully POSTed');
         nTitle.value = ''
         nBody.value = ''
         writeMode = false
@@ -76,7 +75,7 @@ function handleNewPost(event) {
 }
 
 function handleShowPost(id) {
-    console.log('in show post', id);
+    // console.log('in show post', id);
     axios({
         method: "GET",
         url: `/blog/now/${id}`
@@ -109,12 +108,36 @@ function handleDelete(event) {
     })
 }
 
-function handleEdit(event) {
-    console.log('in handleEdit', event.target.param);
+function handleEdit() {
+    // console.log('in handleEdit', event.target.param);
     const editTitle = document.getElementById('edit-title')
     editTitle.value = currentPost.title
     const editBody = document.getElementById('blog-body-edit')
     editBody.value = currentPost.body
+
+    const updateBtn = document.getElementById('update-btn')
+    updateBtn.addEventListener('click', handleUpdate)
+    updateBtn.id = currentPost.id
+}
+
+function handleUpdate(event) {
+    // console.log('in handUpdate,', event.target.id);
+    const nTitle = document.getElementById('edit-title')
+    const nBody = document.getElementById('blog-body-edit')
+    axios({
+        method: "PUT",
+        url: `/blog/${event.target.id}`,
+        data: {
+            title: nTitle.value,
+            body: nBody.value
+        }
+    }).then((response) => {
+        handleShowPost(event.target.id)
+        renderPostList()
+    }).catch((err) => {
+        console.log(err);
+    })
+    
 }
 
 // ! Render
@@ -125,7 +148,7 @@ function renderPostList() {
         method: "GET",
         url: "/blog"
     }).then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         const container = document.getElementById('post-list')
         let blogPosts = response.data
         container.innerHTML = ''
@@ -162,12 +185,12 @@ function renderFeatured() {
             header.innerText = 'Featured Post'
             deleteBtn.setAttribute('disabled', '')
             editBtn.setAttribute('disabled', '')
-            console.log(editBtn);
-            console.log('disabled buttons');
+            // console.log(editBtn);
+            // console.log('disabled buttons');
         } else {
-            console.log('GOT for /featured', response.data);
+            // console.log('GOT for /featured', response.data);
             const featured = response.data[0]
-            console.log(featured);
+            // console.log(featured);
             const header = document.getElementById('showing')
             header.innerText = 'Featured Post'
             container.innerHTML = `
@@ -181,7 +204,6 @@ function renderFeatured() {
             // adding listeners for the delete and edit buttons, because we have to pass some information
             // but potentially not the edit button
             editBtn.removeAttribute('disabled')
-            console.log('removed disabled');
             editBtn.addEventListener('click', handleEdit)
             editBtn.param = featured.id
             deleteBtn.removeAttribute('disabled')
@@ -192,7 +214,6 @@ function renderFeatured() {
 }
 
 // ! State
-onStart()
 let writeMode = false
 let currentPost;
-console.log(document.getElementById('edit-btn'));
+onStart()

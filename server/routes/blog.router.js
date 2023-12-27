@@ -78,6 +78,18 @@ router.delete('/:id', (req, res) => {
 })
 
 // PUT /blog/:id - - - - - Update one thing.
+router.put('/:id', (req, res) => {
+    const queryText = `
+    UPDATE "blogs" SET "title" = $1, "body" = $2, "updated_at" = now() WHERE "id" = $3;
+    `
+    const queryParams = [req.body.title, req.body.body, req.params.id]
+    pool.query(queryText, queryParams)
+        .then((result) => {
+            res.sendStatus(201)
+        }).catch((err) => {
+            console.log(err);
+        })
+})
 
 
 function formatDate (arr) {
