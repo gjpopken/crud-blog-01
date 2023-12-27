@@ -39,6 +39,8 @@ function handleDiscardPost() {
         btn.innerText = 'Write'
         btn.classList.remove('btn-outline-danger')
         btn.classList.add('btn-outline-success')
+        btn.setAttribute('data-bs-toggle', '')
+        btn.setAttribute('data-bs-target', '')
     }
 }
 
