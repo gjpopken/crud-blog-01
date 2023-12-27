@@ -1,6 +1,6 @@
 # Mini Blogr Web App
 
-![a screenshot of the app](Screen Shot 2023-12-27 at 16.34.32.png)
+![a screenshot of the app](app.png)
 
 ## Overview
 
