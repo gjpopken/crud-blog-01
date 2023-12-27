@@ -116,7 +116,6 @@ function handleEdit() {
     editBody.value = currentPost.body
 
     const updateBtn = document.getElementById('update-btn')
-    console.log(updateBtn);
     updateBtn.addEventListener('click', handleUpdate)
     updateBtn.param = currentPost.id
 }
