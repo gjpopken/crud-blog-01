@@ -1,14 +1,7 @@
-
 function onStart() {
     console.log('hello world');
     renderPostList()
     renderFeatured()
-    // the button will check if there are any posts.
-    // const deleteBtn = document.getElementById('delete-btn')
-    // const currentPost = document.getElementById('current-post')
-    // if (currentPost.innerHTML === '') {
-    //     deleteBtn.setAttribute('disabled', '')
-    // }
 }
 
 // ! Handle Functions
@@ -64,7 +57,7 @@ function handleNewPost(event) {
             body: nBody.value
         }
     }).then((response) => {
-        console.log('successfully POSTed');
+        // console.log('successfully POSTed');
         nTitle.value = ''
         nBody.value = ''
         writeMode = false
@@ -82,7 +75,7 @@ function handleNewPost(event) {
 }
 
 function handleShowPost(id) {
-    console.log('in show post', id);
+    // console.log('in show post', id);
     axios({
         method: "GET",
         url: `/blog/now/${id}`
@@ -91,19 +84,21 @@ function handleShowPost(id) {
         const container = document.getElementById('current-post')
         const post = response.data[0]
         const deleteBtn = document.getElementById('delete-btn')
-        showing.innerText = post.inserted_at
+        showing.innerText = post.updated_at
         container.innerHTML = `
-        <h2>${post.title}</h2>
-        <p>${post.body}</p>
+        <h2 id="current-post-title">${post.title}</h2>
+        <p id="current-post-body">${post.body}</p>
         `
-        // deleteBtn.removeEventListener()
+        currentPost = post
         deleteBtn.addEventListener("click", handleDelete)
         deleteBtn.param = post.id
+    }).catch((err) => {
+        console.log(err);
     })
 }
 
 function handleDelete(event) {
-    console.log('in handleDelete', event.target.param);
+    // console.log('in handleDelete', event.target.param);
     axios({
         method: "DELETE",
         url: `/blog/${event.target.param}`
@@ -111,6 +106,38 @@ function handleDelete(event) {
         renderFeatured()
         renderPostList()
     })
+}
+
+function handleEdit() {
+    // console.log('in handleEdit', event.target.param);
+    const editTitle = document.getElementById('edit-title')
+    editTitle.value = currentPost.title
+    const editBody = document.getElementById('blog-body-edit')
+    editBody.value = currentPost.body
+
+    const updateBtn = document.getElementById('update-btn')
+    updateBtn.addEventListener('click', handleUpdate)
+    updateBtn.id = currentPost.id
+}
+
+function handleUpdate(event) {
+    // console.log('in handUpdate,', event.target.id);
+    const nTitle = document.getElementById('edit-title')
+    const nBody = document.getElementById('blog-body-edit')
+    axios({
+        method: "PUT",
+        url: `/blog/${event.target.id}`,
+        data: {
+            title: nTitle.value,
+            body: nBody.value
+        }
+    }).then((response) => {
+        handleShowPost(event.target.id)
+        renderPostList()
+    }).catch((err) => {
+        console.log(err);
+    })
+    
 }
 
 // ! Render
@@ -121,7 +148,7 @@ function renderPostList() {
         method: "GET",
         url: "/blog"
     }).then((response) => {
-        console.log(response.data);
+        // console.log(response.data);
         const container = document.getElementById('post-list')
         let blogPosts = response.data
         container.innerHTML = ''
@@ -146,6 +173,7 @@ function renderPostList() {
 function renderFeatured() {
     const container = document.getElementById('current-post')
     const deleteBtn = document.getElementById('delete-btn')
+    const editBtn = document.getElementById('edit-btn')
     const header = document.getElementById('showing')
 
     axios({
@@ -154,20 +182,30 @@ function renderFeatured() {
     }).then((response) => {
         if (response.data.length === 0) {
             container.innerHTML = 'What will you write about? ☁️'
-            deleteBtn.setAttribute('disabled', '')
             header.innerText = 'Featured Post'
+            deleteBtn.setAttribute('disabled', '')
+            editBtn.setAttribute('disabled', '')
+            // console.log(editBtn);
+            // console.log('disabled buttons');
         } else {
-
-            console.log('GOT for /featured', response.data);
+            // console.log('GOT for /featured', response.data);
             const featured = response.data[0]
-            console.log(featured);
-            
+            // console.log(featured);
+            const header = document.getElementById('showing')
             header.innerText = 'Featured Post'
             container.innerHTML = `
         <h2>${featured.title}</h2>
         <small>${featured.inserted_at}</small>
         <p>${featured.body}</p>
         `
+            // Setting the current post showing to a global variable
+            currentPost = featured
+
+            // adding listeners for the delete and edit buttons, because we have to pass some information
+            // but potentially not the edit button
+            editBtn.removeAttribute('disabled')
+            editBtn.addEventListener('click', handleEdit)
+            editBtn.param = featured.id
             deleteBtn.removeAttribute('disabled')
             deleteBtn.addEventListener("click", handleDelete)
             deleteBtn.param = featured.id
@@ -176,5 +214,6 @@ function renderFeatured() {
 }
 
 // ! State
-onStart()
 let writeMode = false
+let currentPost;
+onStart()
