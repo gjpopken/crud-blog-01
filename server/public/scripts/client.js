@@ -24,8 +24,15 @@ function handleWriteBtn() {
         btn.innerText = 'Cancel'
         btn.classList.remove('btn-outline-success')
         btn.classList.add('btn-outline-danger')
+        btn.setAttribute('data-bs-toggle', 'modal')
+        btn.setAttribute('data-bs-target', '#exampleModal')
     }
-    else if (writeMode === true) {
+}
+
+function handleDiscardPost() {
+    let btn = document.getElementById('write-btn')
+    const container = document.getElementById('new-blog-container')
+    if (writeMode === true) {
         // Todo Triggers the pop-up to make sure that you want to cancel
         writeMode = false
         container.innerHTML = ''
