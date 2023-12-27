@@ -13,9 +13,9 @@ function handleWriteBtn() {
     const container = document.getElementById('new-blog-container')
     const form = `<form onsubmit="handleNewPost(event)" class="mb-5">
     <label for="add-title" class="form-label">Blog Title</label>
-    <input type="text" class="form-control" id="add-title" placeholder="Enter Blog Title" name="add-title">
+    <input required type="text" class="form-control" id="add-title" placeholder="Enter Blog Title" name="add-title">
     <label for="blog-body" class="form-label">New Post</label>
-    <textarea class="form-control mb-3" rows="5" id="blog-body" name="blog-body" placeholder="Enter your thoughts . . . ☁️"></textarea>
+    <textarea required class="form-control mb-3" rows="5" id="blog-body" name="blog-body" placeholder="Enter your thoughts . . . ☁️"></textarea>
     <button type="submit" class="btn btn-outline-success">Post</button>
   </form>`
     if (writeMode === false) {
@@ -84,12 +84,20 @@ function handleShowPost(id) {
         const showing = document.getElementById('showing')
         const container = document.getElementById('current-post')
         const post = response.data[0]
+        const deleteBtn = document.getElementById('delete-btn')
         showing.innerText = post.inserted_at
         container.innerHTML = `
         <h2>${post.title}</h2>
         <p>${post.body}</p>
         `
+        // deleteBtn.removeEventListener()
+        deleteBtn.addEventListener("click", handleDelete)
+        deleteBtn.param = post.id
     })
+}
+
+function handleDelete(event) {
+    console.log('in handleDelete', event.target.param);
 }
 
 // ! Render
@@ -124,6 +132,7 @@ function renderPostList() {
 
 function renderFeatured() {
     const container = document.getElementById('current-post')
+    const deleteBtn = document.getElementById('delete-btn')
 
     axios({
         method: "GET",
@@ -131,6 +140,7 @@ function renderFeatured() {
     }).then((response) => {
         console.log('GOT for /featured', response.data);
         const featured = response.data[0]
+        console.log(featured);
         const header = document.getElementById('showing')
         header.innerText = 'Featured Post'
         container.innerHTML = `
@@ -138,6 +148,9 @@ function renderFeatured() {
         <small>${featured.inserted_at}</small>
         <p>${featured.body}</p>
         `
+        // deleteBtn.removeEventListener()
+        deleteBtn.addEventListener("click", handleDelete)
+        deleteBtn.param = featured.id
     })
 }
 

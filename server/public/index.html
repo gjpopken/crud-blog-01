@@ -35,6 +35,25 @@
     </div>
   </div>
 </div>
+
+<!-- Modal For Delete-->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="deleteModalLabel">Are you sure?</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        This will permenantly delete your blog post. This cannot be undone.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="delete-btn">Delete Post Forever</button>
+      </div>
+    </div>
+  </div>
+</div>
   <div class="container">
     <h1 class="pt-5">Mini Blogr</h1>
     <div class="row mb-5">
@@ -70,5 +89,15 @@
       </div>
     </div>
   </div>
+  <footer>
+    <div class="container mb-5">
+      <div class="row">
+        <div class="col-sm-4" id="post-controls">
+          <div class="line"></div>
+          <button class="btn btn-danger mt-2" data-bs-toggle="modal" data-bs-target="#deleteModal">Delete</button>
+        </div>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
