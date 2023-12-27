@@ -77,7 +77,6 @@ function handleNewPost(event) {
 
 function handleShowPost(id) {
     console.log('in show post', id);
-    let postToReturn;
     axios({
         method: "GET",
         url: `/blog/now/${id}`
@@ -112,6 +111,10 @@ function handleDelete(event) {
 
 function handleEdit(event) {
     console.log('in handleEdit', event.target.param);
+    const editTitle = document.getElementById('edit-title')
+    editTitle.value = currentPost.title
+    const editBody = document.getElementById('blog-body-edit')
+    editBody.value = currentPost.body
 }
 
 // ! Render
@@ -148,6 +151,7 @@ function renderFeatured() {
     const container = document.getElementById('current-post')
     const deleteBtn = document.getElementById('delete-btn')
     const editBtn = document.getElementById('edit-btn')
+    const header = document.getElementById('showing')
 
     axios({
         method: "GET",
@@ -155,8 +159,11 @@ function renderFeatured() {
     }).then((response) => {
         if (response.data.length === 0) {
             container.innerHTML = 'What will you write about? ☁️'
+            header.innerText = 'Featured Post'
             deleteBtn.setAttribute('disabled', '')
             editBtn.setAttribute('disabled', '')
+            console.log(editBtn);
+            console.log('disabled buttons');
         } else {
             console.log('GOT for /featured', response.data);
             const featured = response.data[0]
@@ -173,11 +180,16 @@ function renderFeatured() {
             editTitle.value = featured.title
             const editBody = document.getElementById('blog-body-edit')
             editBody.value = featured.body
-
+            // this only changes the value once. I need a way to preserve this data somewhere
+            // when the pop up disappears, i need those values reset, what could trigger that?
+            // 
+            // Setting the current post showing to a global variable
+            currentPost = featured
 
             // adding listeners for the delete and edit buttons, because we have to pass some information
             // but potentially not the edit button
             editBtn.removeAttribute('disabled')
+            console.log('removed disabled');
             editBtn.addEventListener('click', handleEdit)
             editBtn.param = featured.id
             deleteBtn.removeAttribute('disabled')
@@ -190,3 +202,5 @@ function renderFeatured() {
 // ! State
 onStart()
 let writeMode = false
+let currentPost;
+console.log(document.getElementById('edit-btn'));

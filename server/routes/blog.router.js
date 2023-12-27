@@ -83,6 +83,7 @@ router.delete('/:id', (req, res) => {
 function formatDate (arr) {
     for (i of arr) {
         i.inserted_at = dayjs(i.inserted_at).format('MMM-DD-YYYY')
+        i.updated_at = dayjs(i.updated_at).format('MMM-DD-YYYY')
     }
 }
 
