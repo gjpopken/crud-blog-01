@@ -90,7 +90,7 @@ function handleShowPost(id) {
         <h2 id="current-post-title">${post.title}</h2>
         <p id="current-post-body">${post.body}</p>
         `
-
+        currentPost = post
         deleteBtn.addEventListener("click", handleDelete)
         deleteBtn.param = post.id
     }).catch((err) => {
@@ -175,14 +175,6 @@ function renderFeatured() {
         <small>${featured.inserted_at}</small>
         <p>${featured.body}</p>
         `
-            // Data for when we edit the post
-            const editTitle = document.getElementById('edit-title')
-            editTitle.value = featured.title
-            const editBody = document.getElementById('blog-body-edit')
-            editBody.value = featured.body
-            // this only changes the value once. I need a way to preserve this data somewhere
-            // when the pop up disappears, i need those values reset, what could trigger that?
-            // 
             // Setting the current post showing to a global variable
             currentPost = featured
 
