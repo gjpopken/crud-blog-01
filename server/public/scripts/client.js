@@ -146,6 +146,7 @@ function renderPostList() {
 function renderFeatured() {
     const container = document.getElementById('current-post')
     const deleteBtn = document.getElementById('delete-btn')
+    const header = document.getElementById('showing')
 
     axios({
         method: "GET",
@@ -154,12 +155,13 @@ function renderFeatured() {
         if (response.data.length === 0) {
             container.innerHTML = 'What will you write about? ☁️'
             deleteBtn.setAttribute('disabled', '')
+            header.innerText = 'Featured Post'
         } else {
 
             console.log('GOT for /featured', response.data);
             const featured = response.data[0]
             console.log(featured);
-            const header = document.getElementById('showing')
+            
             header.innerText = 'Featured Post'
             container.innerHTML = `
         <h2>${featured.title}</h2>
