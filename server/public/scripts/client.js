@@ -116,8 +116,9 @@ function handleEdit() {
     editBody.value = currentPost.body
 
     const updateBtn = document.getElementById('update-btn')
+    console.log(updateBtn);
     updateBtn.addEventListener('click', handleUpdate)
-    updateBtn.id = currentPost.id
+    updateBtn.param = currentPost.id
 }
 
 function handleUpdate(event) {
@@ -126,13 +127,13 @@ function handleUpdate(event) {
     const nBody = document.getElementById('blog-body-edit')
     axios({
         method: "PUT",
-        url: `/blog/${event.target.id}`,
+        url: `/blog/${event.target.param}`,
         data: {
             title: nTitle.value,
             body: nBody.value
         }
     }).then((response) => {
-        handleShowPost(event.target.id)
+        handleShowPost(event.target.param)
         renderPostList()
     }).catch((err) => {
         console.log(err);
