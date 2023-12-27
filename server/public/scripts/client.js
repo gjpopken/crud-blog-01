@@ -33,7 +33,6 @@ function handleDiscardPost() {
     let btn = document.getElementById('write-btn')
     const container = document.getElementById('new-blog-container')
     if (writeMode === true) {
-        // Todo Triggers the pop-up to make sure that you want to cancel
         writeMode = false
         container.innerHTML = ''
         btn.innerText = 'Write'
@@ -74,6 +73,13 @@ function handleNewPost(event) {
     })
 }
 
+function handleShowPost(id) {
+    console.log('in show post', id);
+    // axios({
+    //     method: ""
+    // })
+}
+
 // ! Render
 
 function renderPostList() {
@@ -93,10 +99,7 @@ function renderPostList() {
             container.innerHTML += `
             <div class="row"
                 <div class="col">
-                 <button class="btn">${post.title}</button>
-                </div>
-                <div class="col">
-                 <span>${post.inserted_at}</span>
+                 <button class="btn" onclick="handleShowPost(${post.id})">${post.title}<span> ${post.inserted_at}</span></button>
                 </div>
             </div>
             <div class="line"></div>

@@ -12,6 +12,7 @@ router.get('/', (req, res) => {
     pool.query(queryText)
         .then((result) => {
             formatDate(result.rows)
+            shortenTitle(result.rows)
             res.send(result.rows)
         })
         .catch((err) => {
@@ -20,6 +21,10 @@ router.get('/', (req, res) => {
 })
 
 // GET /blog/:id - - - - - Respond with one thing.
+router.get('/:id', (req, res) => {
+    
+})
+
 router.get('/featured', (req, res) => {
     const queryText = `
     SELECT * FROM "blogs" ORDER BY "id" DESC LIMIT 1;`
@@ -58,6 +63,21 @@ router.post('/', (req, res) => {
 function formatDate (arr) {
     for (i of arr) {
         i.inserted_at = dayjs(i.inserted_at).format('MMM-DD-YYYY')
+    }
+}
+
+function shortenTitle (arr) {
+    for (i of arr) {
+        let nTitle = ''
+        if (i.title.length > 10) {
+            for (let j = 0; j < 7; j++) {
+                nTitle += i.title[j]
+            }
+            nTitle += '...'
+            i.title = nTitle
+            console.log(i.title);
+        }
+
     }
 }
 
