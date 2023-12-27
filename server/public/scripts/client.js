@@ -98,6 +98,13 @@ function handleShowPost(id) {
 
 function handleDelete(event) {
     console.log('in handleDelete', event.target.param);
+    axios({
+        method: "DELETE",
+        url: `/blog/${event.target.param}`
+    }).then((response) => {
+        renderFeatured()
+        renderPostList()
+    })
 }
 
 // ! Render
