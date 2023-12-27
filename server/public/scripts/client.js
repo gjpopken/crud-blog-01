@@ -3,6 +3,12 @@ function onStart() {
     console.log('hello world');
     renderPostList()
     renderFeatured()
+    // the button will check if there are any posts.
+    // const deleteBtn = document.getElementById('delete-btn')
+    // const currentPost = document.getElementById('current-post')
+    // if (currentPost.innerHTML === '') {
+    //     deleteBtn.setAttribute('disabled', '')
+    // }
 }
 
 // ! Handle Functions
@@ -145,19 +151,25 @@ function renderFeatured() {
         method: "GET",
         url: "blog/featured"
     }).then((response) => {
-        console.log('GOT for /featured', response.data);
-        const featured = response.data[0]
-        console.log(featured);
-        const header = document.getElementById('showing')
-        header.innerText = 'Featured Post'
-        container.innerHTML = `
+        if (response.data.length === 0) {
+            container.innerHTML = 'What will you write about? ☁️'
+            deleteBtn.setAttribute('disabled', '')
+        } else {
+
+            console.log('GOT for /featured', response.data);
+            const featured = response.data[0]
+            console.log(featured);
+            const header = document.getElementById('showing')
+            header.innerText = 'Featured Post'
+            container.innerHTML = `
         <h2>${featured.title}</h2>
         <small>${featured.inserted_at}</small>
         <p>${featured.body}</p>
         `
-        // deleteBtn.removeEventListener()
-        deleteBtn.addEventListener("click", handleDelete)
-        deleteBtn.param = featured.id
+            deleteBtn.removeAttribute('disabled')
+            deleteBtn.addEventListener("click", handleDelete)
+            deleteBtn.param = featured.id
+        }
     })
 }
 
