@@ -1,3 +1,10 @@
+// TODO Adding the quill editor.
+// Post method working.
+    // Handle when entries are too long.
+// GET method for featured post
+// GET method for clicking the link.
+// The editing window.
+
 function onStart() {
     console.log('hello world');
     renderPostList()
@@ -13,8 +20,8 @@ function handleWriteBtn() {
     const form = `<form onsubmit="handleNewPost(event)" class="mb-5">
     <label for="add-title" class="form-label">Blog Title</label>
     <input required type="text" class="form-control" id="add-title" placeholder="Enter Blog Title" name="add-title">
-    <label for="blog-body" class="form-label">New Post</label>
-    <textarea required class="form-control mb-3" rows="5" id="blog-body" name="blog-body" placeholder="Enter your thoughts . . . ☁️"></textarea>
+    <label for="editor" class="form-label">New Post</label>
+    <div id="editor"></div>
     <button type="submit" class="btn btn-outline-success">Post</button>
   </form>`
     if (writeMode === false) {
@@ -25,6 +32,9 @@ function handleWriteBtn() {
         btn.classList.add('btn-outline-danger')
         btn.setAttribute('data-bs-toggle', 'modal')
         btn.setAttribute('data-bs-target', '#exampleModal')
+        var quill = new Quill('#editor', {
+          theme: 'snow'
+        });
     }
 }
 
@@ -45,7 +55,7 @@ function handleDiscardPost() {
 function handleNewPost(event) {
     event.preventDefault()
     const nTitle = document.getElementById('add-title')
-    const nBody = document.getElementById('blog-body')
+    const nBody = document.getElementById('editor')
     let btn = document.getElementById('write-btn')
     const container = document.getElementById('new-blog-container')
 
@@ -54,7 +64,7 @@ function handleNewPost(event) {
         url: '/blog',
         data: {
             title: nTitle.value,
-            body: nBody.value
+            body: nBody.innerHTML
         }
     }).then((response) => {
         // console.log('successfully POSTed');
@@ -71,6 +81,7 @@ function handleNewPost(event) {
         renderFeatured()
     }).catch((err) => {
         console.log(err);
+        alert('Your post is too long, sorry!')
     })
 }
 
@@ -196,7 +207,7 @@ function renderFeatured() {
             container.innerHTML = `
         <h2>${featured.title}</h2>
         <small>${featured.inserted_at}</small>
-        <p>${featured.body}</p>
+        ${featured.body}
         `
             // Setting the current post showing to a global variable
             currentPost = featured
