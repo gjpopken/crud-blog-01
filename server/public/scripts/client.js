@@ -32,7 +32,7 @@ function handleWriteBtn() {
         btn.classList.add('btn-outline-danger')
         btn.setAttribute('data-bs-toggle', 'modal')
         btn.setAttribute('data-bs-target', '#exampleModal')
-        var quill = new Quill('#editor', {
+        quill = new Quill('#editor', {
           theme: 'snow'
         });
     }
@@ -58,13 +58,15 @@ function handleNewPost(event) {
     const nBody = document.getElementById('editor')
     let btn = document.getElementById('write-btn')
     const container = document.getElementById('new-blog-container')
+    // This gets the content of the editor with all its formatting information.
+    const content = quill.getContents()
 
     axios({
         method: "POST",
         url: '/blog',
         data: {
             title: nTitle.value,
-            body: nBody.innerHTML
+            body: content
         }
     }).then((response) => {
         // console.log('successfully POSTed');
@@ -227,4 +229,5 @@ function renderFeatured() {
 // ! State
 let writeMode = false
 let currentPost;
+let quill;
 onStart()
