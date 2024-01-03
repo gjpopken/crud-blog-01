@@ -124,7 +124,10 @@ function handleDelete(event) {
 }
 
 function handleEdit() {
-    // console.log('in handleEdit', event.target.param);
+    // console.log('in handleEdit');
+    editQuill = new Quill('#edit-editor', {
+        theme: 'snow'
+      })
     const editTitle = document.getElementById('edit-title')
     editTitle.value = currentPost.title
     const editBody = document.getElementById('blog-body-edit')
@@ -227,8 +230,14 @@ function renderFeatured() {
     })
 }
 
+// I need a way to show the number of characters in the text box at any time. 
+// If the number of characters exceeds 2900, it won't let the user submit anything. 
+// So I need to retrieve the text from editor. Whenever the number changes, it needs to update to the DOM
+
+
 // ! State
 let writeMode = false
-let currentPost;
-let quill;
+let currentPost
+let quill
+let editQuill
 onStart()
