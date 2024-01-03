@@ -58,8 +58,10 @@ function handleNewPost(event) {
     const nBody = document.getElementById('editor')
     let btn = document.getElementById('write-btn')
     const container = document.getElementById('new-blog-container')
+
     // This gets the content of the editor with all its formatting information.
-    const content = quill.getContents()
+    const content = quill.root.innerHTML
+
 
     axios({
         method: "POST",
@@ -203,7 +205,6 @@ function renderFeatured() {
         } else {
             // console.log('GOT for /featured', response.data);
             const featured = response.data[0]
-            // console.log(featured);
             const header = document.getElementById('showing')
             header.innerText = 'Featured Post'
             container.innerHTML = `
