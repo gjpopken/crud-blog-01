@@ -59,8 +59,9 @@ function handleNewPost(event) {
     let btn = document.getElementById('write-btn')
     const container = document.getElementById('new-blog-container')
 
-    // This gets the content of the editor with all its formatting information.
+    // This gets the content of the editor with all its formatting information, both as raw HTML and as the Delta object so that I can use it to edit later.
     const content = quill.root.innerHTML
+    const delta = quill.getContents()
 
 
     axios({
@@ -68,7 +69,8 @@ function handleNewPost(event) {
         url: '/blog',
         data: {
             title: nTitle.value,
-            body: content
+            body: content,
+            delta: delta
         }
     }).then((response) => {
         // console.log('successfully POSTed');
@@ -125,9 +127,6 @@ function handleDelete(event) {
 
 function handleEdit() {
     // console.log('in handleEdit');
-    editQuill = new Quill('#edit-editor', {
-        theme: 'snow'
-      })
     const editTitle = document.getElementById('edit-title')
     editTitle.value = currentPost.title
     const editBody = document.getElementById('blog-body-edit')
@@ -239,5 +238,5 @@ function renderFeatured() {
 let writeMode = false
 let currentPost
 let quill
-let editQuill
+// let editQuill
 onStart()

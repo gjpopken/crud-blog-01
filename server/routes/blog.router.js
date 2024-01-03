@@ -51,10 +51,10 @@ router.get('/featured', (req, res) => {
 router.post('/', (req, res) => {
     console.log(req.body);
     const queryText = `
-    INSERT INTO "blogs" ("title", "body")
-    VALUES ($1, $2);
+    INSERT INTO "blogs" ("title", "body", "delta")
+    VALUES ($1, $2, $3);
     `
-    const queryParams = [req.body.title, req.body.body]
+    const queryParams = [req.body.title, req.body.body, req.body.delta]
     pool.query(queryText, queryParams)
         .then((result) => {
             res.sendStatus(201)
