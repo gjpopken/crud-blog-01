@@ -1,8 +1,8 @@
 // TODO Adding the quill editor.
-// Post method working.
+// //Post method working.
     // Handle when entries are too long.
-// GET method for featured post
-// GET method for clicking the link.
+// //GET method for featured post
+// //GET method for clicking the link.
 // The editing window.
 
 function onStart() {
