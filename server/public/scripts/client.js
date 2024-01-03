@@ -1,6 +1,6 @@
 // TODO Adding the quill editor.
 // //Post method working.
-    // Handle when entries are too long.
+// Handle when entries are too long.
 // //GET method for featured post
 // //GET method for clicking the link.
 // The editing window.
@@ -33,7 +33,7 @@ function handleWriteBtn() {
         btn.setAttribute('data-bs-toggle', 'modal')
         btn.setAttribute('data-bs-target', '#exampleModal')
         quill = new Quill('#editor', {
-          theme: 'snow'
+            theme: 'snow'
         });
     }
 }
@@ -62,6 +62,7 @@ function handleNewPost(event) {
     // This gets the content of the editor with all its formatting information, both as raw HTML and as the Delta object so that I can use it to edit later.
     const content = quill.root.innerHTML
     const delta = quill.getContents()
+
 
 
     axios({
@@ -126,11 +127,11 @@ function handleDelete(event) {
 }
 
 function handleEdit() {
-    // console.log('in handleEdit');
+    // This set the contents of the editor, and has to be parse from when it comes back from the DB
+    editQuill.setContents(JSON.parse(currentPost.delta).ops)
+
     const editTitle = document.getElementById('edit-title')
     editTitle.value = currentPost.title
-    const editBody = document.getElementById('blog-body-edit')
-    editBody.value = currentPost.body
 
     const updateBtn = document.getElementById('update-btn')
     updateBtn.addEventListener('click', handleUpdate)
@@ -140,13 +141,18 @@ function handleEdit() {
 function handleUpdate(event) {
     // console.log('in handUpdate,', event.target.id);
     const nTitle = document.getElementById('edit-title')
-    const nBody = document.getElementById('blog-body-edit')
+    // const nBody = document.getElementById('blog-body-edit')
+    const nContent = editQuill.getContents()
+    const nBody = document.getElementById('edit-editor')
+    console.log('new body html,', nBody);
+
     axios({
         method: "PUT",
         url: `/blog/${event.target.param}`,
         data: {
             title: nTitle.value,
-            body: nBody.value
+            body: editQuill.root.innerHTML,
+            delta: nContent
         }
     }).then((response) => {
         handleShowPost(event.target.param)
@@ -154,7 +160,7 @@ function handleUpdate(event) {
     }).catch((err) => {
         console.log(err);
     })
-    
+
 }
 
 // ! Render
@@ -238,5 +244,8 @@ function renderFeatured() {
 let writeMode = false
 let currentPost
 let quill
+let editQuill = new Quill('#edit-editor', {
+    theme: 'snow'
+})
 // let editQuill
 onStart()
