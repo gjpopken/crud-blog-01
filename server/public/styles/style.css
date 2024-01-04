@@ -17,3 +17,7 @@ body {
 #edit-editor {
   height: 375px;
 }
+
+.red {
+  color: red;
+}

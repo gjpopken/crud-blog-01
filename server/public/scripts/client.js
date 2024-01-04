@@ -3,7 +3,7 @@
 // Handle when entries are too long.
 // //GET method for featured post
 // //GET method for clicking the link.
-// The editing window.
+// //The editing window.
 
 function onStart() {
     console.log('hello world');
@@ -22,7 +22,8 @@ function handleWriteBtn() {
     <input required type="text" class="form-control" id="add-title" placeholder="Enter Blog Title" name="add-title">
     <label for="editor" class="form-label">New Post</label>
     <div id="editor"></div>
-    <button type="submit" class="btn btn-outline-success">Post</button>
+    <p id="chars"></p>
+    <button id="subbtn" type="submit" class="btn btn-outline-success">Post</button>
   </form>`
     if (writeMode === false) {
         writeMode = true
@@ -35,7 +36,25 @@ function handleWriteBtn() {
         quill = new Quill('#editor', {
             theme: 'snow'
         });
+        const editor = document.getElementById('editor')
+        editor.addEventListener("keydown", handleNumberOfChars)
     }
+}
+
+function handleNumberOfChars() {
+    // console.log('in handleNumberOfChars');
+    let charCount = quill.getLength()
+    const chars = document.getElementById('chars')
+    const btn = document.getElementById('subbtn')
+    chars.innerText = charCount
+    if (charCount >= 1500) {
+        chars.classList.add('red')
+        btn.setAttribute('disabled', true)
+    } else {
+        chars.classList.remove('red')
+        btn.removeAttribute('disabled')
+    }
+    // console.log(charCount);
 }
 
 function handleDiscardPost() {
@@ -144,7 +163,6 @@ function handleUpdate(event) {
     // const nBody = document.getElementById('blog-body-edit')
     const nContent = editQuill.getContents()
     const nBody = document.getElementById('edit-editor')
-    console.log('new body html,', nBody);
 
     axios({
         method: "PUT",
