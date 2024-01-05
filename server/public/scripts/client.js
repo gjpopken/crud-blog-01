@@ -234,44 +234,71 @@ function renderPostList(response) {
     }
 }
 
+/**
+ * GETs the newest post from the database, and sets it as the currentPost, and calls the renderFeaturedPost function. 
+ */
 function getFeatured() {
 
     axios({
         method: "GET",
         url: "blog/featured"
     }).then((response) => {
+        setCurrentPost(response.data[0])
         renderFeaturedPost(response)
     }).catch((error) => {
         console.log(error);
     })
 }
 
+/**
+ * This function handles the rendering of the current post to the page.
+ * It will check to make sure that there is data to show, then will
+ * render the currentPost if there is one.
+ * Is called when a new post is added and the page loads, but not when a post is selected from the 
+ * sidebar. 
+ * @param {Object} response the response from the GET request. 
+ */
 function renderFeaturedPost(response) {
     if (response.data.length === 0) {
         renderNoFeatured()
     } else {
-        // TODO Finish refactoring this function.
         const container = document.getElementById('current-post')
-        const featured = response.data[0]
         const header = document.getElementById('showing')
+
         header.innerText = 'Featured Post'
         container.innerHTML = `
-    <h2>${featured.title}</h2>
-    <small>${featured.inserted_at}</small>
-    ${featured.body}
+            <h2>${currentPost.title}</h2>
+            <small>${currentPost.inserted_at}</small>
+            ${currentPost.body}
     `
-        // Setting the current post showing to a global variable
-        currentPost = featured
-
-        // adding listeners for the delete and edit buttons, because we have to pass some information
-        // but potentially not the edit button
-        editBtn.removeAttribute('disabled')
-        editBtn.addEventListener('click', handleEdit)
-        editBtn.param = featured.id
-        deleteBtn.removeAttribute('disabled')
-        deleteBtn.addEventListener("click", handleDelete)
-        deleteBtn.param = featured.id
+        reactivateButton('edit-btn', handleEdit, currentPost.id)
+        reactivateButton('delete-btn', handleDelete, currentPost.id)
     }
+}
+
+/**
+ * A function to get a particular button by ID, removed a disabled attribute from it,
+ * add an event listener with a specified callbackFn
+ * @param {string} id the 'id' of the button to reference
+ * @param {Function} callbackFn the function to attach to the event listener of the button
+ * @param {number} param optional number to assign to a param key for the button.
+ */
+function reactivateButton(id, callbackFn, param) {
+    const btn = document.getElementById(id)
+    btn.removeAttribute('disabled')
+    btn.addEventListener('click', callbackFn)
+    if(param) {
+        btn.param = param
+    }
+}
+
+
+/**
+ * Sets the currentPost to post from the database
+ * @param {object} featured an object to be set as the new current post.
+ */
+function setCurrentPost(featured) {
+    currentPost = featured
 }
 
 /**
