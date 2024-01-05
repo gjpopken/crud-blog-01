@@ -1,14 +1,10 @@
-// TODO Adding the quill editor.
-// //Post method working.
-// Handle when entries are too long.
-// //GET method for featured post
-// //GET method for clicking the link.
-// //The editing window.
+// TODO for next time :
+// finish refactoring renderFeaturedPost, this is why the app is breaking.
 
 function onStart() {
-    console.log('hello world');
-    renderPostList()
-    renderFeatured()
+    // GETs and Renders post list to DOM
+    getPostList()
+    getFeatured()
 }
 
 // ! Handle Functions
@@ -105,8 +101,8 @@ function handleNewPost(event) {
         btn.classList.add('btn-outline-success')
         btn.setAttribute('data-bs-toggle', '')
         btn.setAttribute('data-bs-target', '')
-        renderPostList()
-        renderFeatured()
+        getPostList()
+        getFeatured()
     }).catch((err) => {
         console.log(err);
         alert('Your post is too long, sorry!')
@@ -142,8 +138,8 @@ function handleDelete(event) {
         method: "DELETE",
         url: `/blog/${event.target.param}`
     }).then((response) => {
-        renderFeatured()
-        renderPostList()
+        getFeatured()
+        getPostList()
     })
 }
 
@@ -193,7 +189,7 @@ function handleUpdate(event) {
         }
     }).then((response) => {
         handleShowPost(event.target.param)
-        renderPostList()
+        getPostList()
     }).catch((err) => {
         console.log(err);
     })
@@ -201,75 +197,103 @@ function handleUpdate(event) {
 }
 
 // ! Render
-
-function renderPostList() {
-    // to render the post titles to the side bar to be nagivated to
+/**
+ * To render the post titles to the side bar for navigation
+ */
+function getPostList() {
     axios({
         method: "GET",
         url: "/blog"
     }).then((response) => {
-        // console.log(response.data);
-        const container = document.getElementById('post-list')
-        let blogPosts = response.data
-        container.innerHTML = ''
-        if (blogPosts.length === 0) {
-            container.innerHTML = `Nothing here, yet! ✏️`
-        }
-        for (post of blogPosts) {
-            container.innerHTML += `
+        renderPostList(response);
+    }).catch((err) => {
+        console.log(err);
+    })
+}
+
+/**
+ * Renders a response object from a GET request to the DOM
+ * @param {object} response GET object
+ */
+function renderPostList(response) {
+    const container = document.getElementById('post-list');
+    let postList = response.data;
+    container.innerHTML = '';
+    if (postList.length === 0) {
+        container.innerHTML = `Nothing here, yet! ✏️`;
+    }
+    for (post of postList) {
+        container.innerHTML += `
             <div class="row"
                 <div class="col">
                  <button class="btn" onclick="handleShowPost(${post.id})">${post.title}<span> ${post.inserted_at}</span></button>
                 </div>
             </div>
             <div class="line"></div>
-            `
-        }
-    }).catch((err) => {
-        console.log(err);
-    })
+            `;
+    }
 }
 
-function renderFeatured() {
-    const container = document.getElementById('current-post')
-    const deleteBtn = document.getElementById('delete-btn')
-    const editBtn = document.getElementById('edit-btn')
-    const header = document.getElementById('showing')
+function getFeatured() {
 
     axios({
         method: "GET",
         url: "blog/featured"
     }).then((response) => {
-        if (response.data.length === 0) {
-            container.innerHTML = 'What will you write about? ☁️'
-            header.innerText = 'Featured Post'
-            deleteBtn.setAttribute('disabled', '')
-            editBtn.setAttribute('disabled', '')
-            // console.log(editBtn);
-            // console.log('disabled buttons');
-        } else {
-            // console.log('GOT for /featured', response.data);
-            const featured = response.data[0]
-            const header = document.getElementById('showing')
-            header.innerText = 'Featured Post'
-            container.innerHTML = `
-        <h2>${featured.title}</h2>
-        <small>${featured.inserted_at}</small>
-        ${featured.body}
-        `
-            // Setting the current post showing to a global variable
-            currentPost = featured
-
-            // adding listeners for the delete and edit buttons, because we have to pass some information
-            // but potentially not the edit button
-            editBtn.removeAttribute('disabled')
-            editBtn.addEventListener('click', handleEdit)
-            editBtn.param = featured.id
-            deleteBtn.removeAttribute('disabled')
-            deleteBtn.addEventListener("click", handleDelete)
-            deleteBtn.param = featured.id
-        }
+        renderFeaturedPost(response)
+    }).catch((error) => {
+        console.log(error);
     })
+}
+
+function renderFeaturedPost(response) {
+    if (response.data.length === 0) {
+        renderNoFeatured()
+    } else {
+        // TODO Finish refactoring this function.
+        const container = document.getElementById('current-post')
+        const featured = response.data[0]
+        const header = document.getElementById('showing')
+        header.innerText = 'Featured Post'
+        container.innerHTML = `
+    <h2>${featured.title}</h2>
+    <small>${featured.inserted_at}</small>
+    ${featured.body}
+    `
+        // Setting the current post showing to a global variable
+        currentPost = featured
+
+        // adding listeners for the delete and edit buttons, because we have to pass some information
+        // but potentially not the edit button
+        editBtn.removeAttribute('disabled')
+        editBtn.addEventListener('click', handleEdit)
+        editBtn.param = featured.id
+        deleteBtn.removeAttribute('disabled')
+        deleteBtn.addEventListener("click", handleDelete)
+        deleteBtn.param = featured.id
+    }
+}
+
+/**
+ * Function that renders a special message and disables delete and 
+ * edit buttons if there are no blogs to be shown. 
+ */
+function renderNoFeatured() {
+    const container = document.getElementById('current-post')
+    const header = document.getElementById('showing')
+    container.innerHTML = 'What will you write about? ☁️'
+    header.innerText = 'Featured Post'
+    disableButton('delete-btn')
+    disableButton('edit-btn')
+}
+
+/**
+ * Disables a button on the DOM
+ * @param {string} id enter ID of button to be disabled.
+ */
+function disableButton(id) {
+    const btn = document.getElementById(id)
+    btn.setAttribute('disabled', '')
 }
 
 // ! State
@@ -281,3 +305,5 @@ let editQuill = new Quill('#edit-editor', {
 })
 
 onStart()
+
+
