@@ -34,8 +34,10 @@ function handleWriteBtn() {
         btn.setAttribute('data-bs-toggle', 'modal')
         btn.setAttribute('data-bs-target', '#exampleModal')
         quill = new Quill('#editor', {
-            theme: 'snow'
+            theme: 'snow',
+            placeholder: "Enter your thoughts . . . ☁️"
         });
+
         // better method for updating the charcount
         quill.on('text-change', handleNumberOfChars)
     }
