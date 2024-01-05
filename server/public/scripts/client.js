@@ -36,8 +36,8 @@ function handleWriteBtn() {
         quill = new Quill('#editor', {
             theme: 'snow'
         });
-        const editor = document.getElementById('editor')
-        editor.addEventListener("keydown", handleNumberOfChars)
+        // better method for updating the charcount
+        quill.on('text-change', handleNumberOfChars)
     }
 }
 
@@ -148,6 +148,7 @@ function handleDelete(event) {
 function handleEdit() {
     // This set the contents of the editor, and has to be parse from when it comes back from the DB
     editQuill.setContents(JSON.parse(currentPost.delta).ops)
+    editQuill.on('text-change', handleNumberOfCharsEdit)
 
     const editTitle = document.getElementById('edit-title')
     editTitle.value = currentPost.title
@@ -155,6 +156,22 @@ function handleEdit() {
     const updateBtn = document.getElementById('update-btn')
     updateBtn.addEventListener('click', handleUpdate)
     updateBtn.param = currentPost.id
+}
+
+
+// TODO Make this and the other number of Chars one function
+function handleNumberOfCharsEdit() {
+    let charCount = editQuill.getLength()
+    const pChar = document.getElementById('edit-char-count')
+    pChar.innerText = charCount
+    const btn = document.getElementById('update-btn')
+    if (charCount >= 1500) {
+        pChar.classList.add('red')
+        btn.setAttribute('disabled', true)
+    } else {
+        pChar.classList.remove('red')
+        btn.removeAttribute('disabled')
+    }
 }
 
 function handleUpdate(event) {
@@ -253,11 +270,6 @@ function renderFeatured() {
     })
 }
 
-// I need a way to show the number of characters in the text box at any time. 
-// If the number of characters exceeds 2900, it won't let the user submit anything. 
-// So I need to retrieve the text from editor. Whenever the number changes, it needs to update to the DOM
-
-
 // ! State
 let writeMode = false
 let currentPost
@@ -265,5 +277,5 @@ let quill
 let editQuill = new Quill('#edit-editor', {
     theme: 'snow'
 })
-// let editQuill
+
 onStart()
