@@ -19,7 +19,7 @@ function handleWriteBtn() {
     const container = document.getElementById('new-blog-container')
     const form = `<form onsubmit="handleNewPost(event)" class="mb-5">
     <label for="add-title" class="form-label">Blog Title</label>
-    <input required type="text" class="form-control" id="add-title" placeholder="Enter Blog Title" name="add-title">
+    <input required type="text" class="form-control mb-5" id="add-title" placeholder="Enter Blog Title" name="add-title">
     <label for="editor" class="form-label">New Post</label>
     <div id="editor"></div>
     <p id="chars"></p>
