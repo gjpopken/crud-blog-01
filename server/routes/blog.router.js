@@ -1,6 +1,7 @@
 const express = require('express');
 const pool = require('../modules/pool.js');
-const dayjs = require('dayjs')
+const utilities = require('../modules/server-utilites.js')
+console.log('utilites:', utilities);
 
 const router = express.Router();
 
@@ -11,8 +12,8 @@ router.get('/', (req, res) => {
     SELECT * FROM "blogs" ORDER BY "id" DESC;`
     pool.query(queryText)
         .then((result) => {
-            formatDate(result.rows)
-            shortenTitle(result.rows)
+            utilities.formatDate(result.rows)
+            utilities.shortenTitle(result.rows)
             res.send(result.rows)
         })
         .catch((err) => {
@@ -27,7 +28,7 @@ router.get('/now/:id', (req, res) => {
     `
     pool.query(queryText, [req.params.id])
         .then((result) => {
-            formatDate(result.rows)
+            utilities.formatDate(result.rows)
             res.send(result.rows)
         }).catch((err) => {
             console.log(err);
@@ -39,7 +40,7 @@ router.get('/featured', (req, res) => {
     SELECT * FROM "blogs" ORDER BY "id" DESC LIMIT 1;`
     pool.query(queryText)
         .then((result) => {
-            formatDate(result.rows)
+            utilities.formatDate(result.rows)
             res.send(result.rows)
         })
         .catch((err) => {
@@ -92,27 +93,27 @@ router.put('/:id', (req, res) => {
 })
 
 
-function formatDate (arr) {
-    for (i of arr) {
-        i.inserted_at = dayjs(i.inserted_at).format('MMM-DD-YYYY')
-        i.updated_at = dayjs(i.updated_at).format('MMM-DD-YYYY')
-    }
-}
+// function formatDate (arr) {
+//     for (i of arr) {
+//         i.inserted_at = dayjs(i.inserted_at).format('MMM-DD-YYYY')
+//         i.updated_at = dayjs(i.updated_at).format('MMM-DD-YYYY')
+//     }
+// }
 
-function shortenTitle (arr) {
-    for (i of arr) {
-        let nTitle = ''
-        if (i.title.length > 10) {
-            for (let j = 0; j < 7; j++) {
-                nTitle += i.title[j]
-            }
-            nTitle += '...'
-            i.title = nTitle
-            console.log(i.title);
-        }
+// function shortenTitle (arr) {
+//     for (i of arr) {
+//         let nTitle = ''
+//         if (i.title.length > 10) {
+//             for (let j = 0; j < 7; j++) {
+//                 nTitle += i.title[j]
+//             }
+//             nTitle += '...'
+//             i.title = nTitle
+//             console.log(i.title);
+//         }
 
-    }
-}
+//     }
+// }
 
 
 module.exports = router;
