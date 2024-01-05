@@ -9,3 +9,15 @@ body {
 .line {
   border-top: .5px solid gray;
 }
+
+#editor {
+  height: 375px;
+}
+
+#edit-editor {
+  height: 375px;
+}
+
+.red {
+  color: red;
+}
