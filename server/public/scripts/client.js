@@ -54,6 +54,20 @@ function handleNumberOfChars() {
     }
     // console.log(charCount);
 }
+// TODO Make this and the other number of Chars one function
+function handleNumberOfCharsEdit() {
+    let charCount = editQuill.getLength()
+    const pChar = document.getElementById('edit-char-count')
+    pChar.innerText = charCount
+    const btn = document.getElementById('update-btn')
+    if (charCount >= 1500) {
+        pChar.classList.add('red')
+        btn.setAttribute('disabled', true)
+    } else {
+        pChar.classList.remove('red')
+        btn.removeAttribute('disabled')
+    }
+}
 
 function handleDiscardPost() {
     let btn = document.getElementById('write-btn')
@@ -156,22 +170,6 @@ function handleEdit() {
     updateBtn.param = currentPost.id
 }
 
-
-// TODO Make this and the other number of Chars one function
-function handleNumberOfCharsEdit() {
-    let charCount = editQuill.getLength()
-    const pChar = document.getElementById('edit-char-count')
-    pChar.innerText = charCount
-    const btn = document.getElementById('update-btn')
-    if (charCount >= 1500) {
-        pChar.classList.add('red')
-        btn.setAttribute('disabled', true)
-    } else {
-        pChar.classList.remove('red')
-        btn.removeAttribute('disabled')
-    }
-}
-
 function handleUpdate(event) {
     // console.log('in handUpdate,', event.target.id);
     const nTitle = document.getElementById('edit-title')
@@ -211,6 +209,7 @@ function getPostList() {
     })
 }
 
+// ! A rendering function doc
 /**
  * Renders a response object from a GET request to the DOM
  * @param {object} response GET object
@@ -250,6 +249,7 @@ function getFeatured() {
     })
 }
 
+// ! A rendering function doc
 /**
  * This function handles the rendering of the current post to the page.
  * It will check to make sure that there is data to show, then will
@@ -276,31 +276,7 @@ function renderFeaturedPost(response) {
     }
 }
 
-/**
- * A function to get a particular button by ID, removed a disabled attribute from it,
- * add an event listener with a specified callbackFn
- * @param {string} id the 'id' of the button to reference
- * @param {Function} callbackFn the function to attach to the event listener of the button
- * @param {number} param optional number to assign to a param key for the button.
- */
-function reactivateButton(id, callbackFn, param) {
-    const btn = document.getElementById(id)
-    btn.removeAttribute('disabled')
-    btn.addEventListener('click', callbackFn)
-    if(param) {
-        btn.param = param
-    }
-}
-
-
-/**
- * Sets the currentPost to post from the database
- * @param {object} featured an object to be set as the new current post.
- */
-function setCurrentPost(featured) {
-    currentPost = featured
-}
-
+// ! Render functions doc
 /**
  * Function that renders a special message and disables delete and 
  * edit buttons if there are no blogs to be shown. 
@@ -312,15 +288,6 @@ function renderNoFeatured() {
     header.innerText = 'Featured Post'
     disableButton('delete-btn')
     disableButton('edit-btn')
-}
-
-/**
- * Disables a button on the DOM
- * @param {string} id enter ID of button to be disabled.
- */
-function disableButton(id) {
-    const btn = document.getElementById(id)
-    btn.setAttribute('disabled', '')
 }
 
 // ! State
