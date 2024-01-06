@@ -118,27 +118,35 @@ function exitWriteMode() {
     btn.setAttribute('data-bs-target', '')
 }
 
-function handleShowPost(id) {
-    // console.log('in show post', id);
+/**
+ * A function that gets one post from the server, the active post. 
+ * @param {Number} id number of the post to GET from server
+ */
+function handleGetActivePost(id) {
     axios({
         method: "GET",
         url: `/blog/now/${id}`
     }).then((response) => {
-        const showing = document.getElementById('showing')
-        const container = document.getElementById('current-post')
-        const post = response.data[0]
-        const deleteBtn = document.getElementById('delete-btn')
-        showing.innerText = post.updated_at
-        container.innerHTML = `
-        <h2 id="current-post-title">${post.title}</h2>
-        <p id="current-post-body">${post.body}</p>
-        `
-        currentPost = post
-        deleteBtn.addEventListener("click", handleDelete)
-        deleteBtn.param = post.id
+        renderActivePost(response)
     }).catch((err) => {
         console.log(err);
     })
+}
+
+/**
+ * Renders an active post to the DOM.
+ * @param {Object} response response object from GET request.
+ */
+function renderActivePost(response) {
+    const showing = document.getElementById('showing')
+    const container = document.getElementById('current-post')
+    setCurrentPost(response.data[0])
+    showing.innerText = currentPost.updated_at
+    container.innerHTML = `
+        <h2 id="current-post-title">${currentPost.title}</h2>
+        <p id="current-post-body">${currentPost.body}</p>
+        `
+    reactivateButton('delete-btn', handleDelete, currentPost.id)
 }
 
 function handleDelete(event) {
@@ -182,7 +190,7 @@ function handleUpdate(event) {
             delta: nContent
         }
     }).then((response) => {
-        handleShowPost(event.target.param)
+        handleGetActivePost(event.target.param)
         getPostList()
     }).catch((err) => {
         console.log(err);

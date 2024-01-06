@@ -14,7 +14,7 @@ function renderPostList(response) {
         container.innerHTML += `
             <div class="row"
                 <div class="col">
-                 <button class="btn" onclick="handleShowPost(${post.id})">${post.title}<span> ${post.inserted_at}</span></button>
+                 <button class="btn" onclick="handleGetActivePost(${post.id})">${post.title}<span> ${post.inserted_at}</span></button>
                 </div>
             </div>
             <div class="line"></div>
