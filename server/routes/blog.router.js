@@ -1,6 +1,6 @@
 const express = require('express');
 const pool = require('../modules/pool.js');
-const dayjs = require('dayjs')
+const utilities = require('../modules/server-utilites.js')
 
 const router = express.Router();
 
@@ -11,8 +11,8 @@ router.get('/', (req, res) => {
     SELECT * FROM "blogs" ORDER BY "id" DESC;`
     pool.query(queryText)
         .then((result) => {
-            formatDate(result.rows)
-            shortenTitle(result.rows)
+            utilities.formatDate(result.rows)
+            utilities.shortenTitle(result.rows)
             res.send(result.rows)
         })
         .catch((err) => {
@@ -27,7 +27,7 @@ router.get('/now/:id', (req, res) => {
     `
     pool.query(queryText, [req.params.id])
         .then((result) => {
-            formatDate(result.rows)
+            utilities.formatDate(result.rows)
             res.send(result.rows)
         }).catch((err) => {
             console.log(err);
@@ -39,7 +39,7 @@ router.get('/featured', (req, res) => {
     SELECT * FROM "blogs" ORDER BY "id" DESC LIMIT 1;`
     pool.query(queryText)
         .then((result) => {
-            formatDate(result.rows)
+            utilities.formatDate(result.rows)
             res.send(result.rows)
         })
         .catch((err) => {
@@ -49,12 +49,12 @@ router.get('/featured', (req, res) => {
 
 // POST /blog - - - - - -  Create one thing.
 router.post('/', (req, res) => {
-    console.log(req.body);
+    const incomingPost = req.body
     const queryText = `
     INSERT INTO "blogs" ("title", "body", "delta")
     VALUES ($1, $2, $3);
     `
-    const queryParams = [req.body.title, req.body.body, req.body.delta]
+    const queryParams = [incomingPost.title, incomingPost.body, incomingPost.delta]
     pool.query(queryText, queryParams)
         .then((result) => {
             res.sendStatus(201)
@@ -79,10 +79,11 @@ router.delete('/:id', (req, res) => {
 
 // PUT /blog/:id - - - - - Update one thing.
 router.put('/:id', (req, res) => {
+    const incomingEdit = req.body
     const queryText = `
     UPDATE "blogs" SET "title" = $1, "body" = $2, "updated_at" = now(), "delta" = $4 WHERE "id" = $3;
     `
-    const queryParams = [req.body.title, req.body.body, req.params.id, req.body.delta]
+    const queryParams = [incomingEdit.title, incomingEdit.body, req.params.id, incomingEdit.delta]
     pool.query(queryText, queryParams)
         .then((result) => {
             res.sendStatus(201)
@@ -90,29 +91,5 @@ router.put('/:id', (req, res) => {
             console.log(err);
         })
 })
-
-
-function formatDate (arr) {
-    for (i of arr) {
-        i.inserted_at = dayjs(i.inserted_at).format('MMM-DD-YYYY')
-        i.updated_at = dayjs(i.updated_at).format('MMM-DD-YYYY')
-    }
-}
-
-function shortenTitle (arr) {
-    for (i of arr) {
-        let nTitle = ''
-        if (i.title.length > 10) {
-            for (let j = 0; j < 7; j++) {
-                nTitle += i.title[j]
-            }
-            nTitle += '...'
-            i.title = nTitle
-            console.log(i.title);
-        }
-
-    }
-}
-
 
 module.exports = router;

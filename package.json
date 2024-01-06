@@ -1,5 +1,5 @@
 {
-  "name": "full-stack-crud-starter",
+  "name": "full-stack-crud-blog-app-one",
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
@@ -8,7 +8,7 @@
     "server": "nodemon server/server.js"
   },
   "keywords": [],
-  "author": "Prime Digital Academy",
+  "author": "Gavin Popken",
   "license": "ISC",
   "dependencies": {
     "dayjs": "^1.11.10",
