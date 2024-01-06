@@ -1,5 +1,5 @@
 // TODO for next time :
-// finish refactoring renderFeaturedPost, this is why the app is breaking.
+// //finish refactoring renderFeaturedPost, this is why the app is breaking.
 
 function onStart() {
     // GETs and Renders post list to DOM
@@ -8,9 +8,12 @@ function onStart() {
 }
 
 // ! Handle Functions
+/**
+ * Function called when the 'Write' button is clicked.
+ * Causes the form with Quill bloc to appear. 
+ */
 function handleWriteBtn() {
-    // console.log(' in handleWriteBtn ');
-    // Get the button, and container that the form will be populated in 
+    // Get the button and container that the form will be populated in 
     let btn = document.getElementById('write-btn')
     const container = document.getElementById('new-blog-container')
     const form = `<form onsubmit="handleNewPost(event)" class="mb-5">
@@ -22,26 +25,34 @@ function handleWriteBtn() {
     <button id="subbtn" type="submit" class="btn btn-outline-success">Post</button>
   </form>`
     if (writeMode === false) {
+        // Toggles writeMode
         writeMode = true
+        // Sets the container to the form
         container.innerHTML = form
+        // Sets up button so it reads Cancel, and will pull up the modal
+        // for cancelling
         btn.innerText = 'Cancel'
         btn.classList.remove('btn-outline-success')
         btn.classList.add('btn-outline-danger')
         btn.setAttribute('data-bs-toggle', 'modal')
         btn.setAttribute('data-bs-target', '#exampleModal')
+        // initializes the Quill editor
         quill = new Quill('#editor', {
             theme: 'snow',
             placeholder: "Enter your thoughts . . . ☁️"
         });
 
-        // better method for updating the charcount
-        quill.on('text-change', handleNumberOfChars)
+        // Adds listener for edit to update a typecount. 
+        quill.on('editor-change', handleNumberOfChars)
     }
 }
+// id names: 'chars', 'subbtn'
+function handleNumberOfChars(event, source) {
+    // console.log(event, source);
+    // console.log(quillObj, containerId, btnId);
 
-function handleNumberOfChars() {
-    // console.log('in handleNumberOfChars');
     let charCount = quill.getLength()
+    console.log(charCount);
     const chars = document.getElementById('chars')
     const btn = document.getElementById('subbtn')
     chars.innerText = charCount
@@ -52,7 +63,6 @@ function handleNumberOfChars() {
         chars.classList.remove('red')
         btn.removeAttribute('disabled')
     }
-    // console.log(charCount);
 }
 // TODO Make this and the other number of Chars one function
 function handleNumberOfCharsEdit() {
