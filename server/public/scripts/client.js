@@ -149,8 +149,11 @@ function renderActivePost(response) {
     reactivateButton('delete-btn', handleDelete, currentPost.id)
 }
 
+/**
+ * DELETE request for a post in the database
+ * @param {Object} event 
+ */
 function handleDelete(event) {
-    // console.log('in handleDelete', event.target.param);
     axios({
         method: "DELETE",
         url: `/blog/${event.target.param}`
@@ -160,34 +163,35 @@ function handleDelete(event) {
     })
 }
 
+/**
+ * A function to set up the edit modal with the right title and 
+ * editor text.
+ */
 function handleEdit() {
-    // This set the contents of the editor, and has to be parse from when it comes back from the DB
+    // This set the contents of the editor, and has to be parsed 
+    // from when it comes back from the DB
     editQuill.setContents(JSON.parse(currentPost.delta).ops)
-    // editQuill.on('text-change', handleNumberOfCharsEdit)
     handleNumberOfChars(editQuill, 'edit-char-count', 'update-btn')
-
     const editTitle = document.getElementById('edit-title')
     editTitle.value = currentPost.title
-
-    const updateBtn = document.getElementById('update-btn')
-    updateBtn.addEventListener('click', handleUpdate)
-    updateBtn.param = currentPost.id
+    reactivateButton('update-btn', handleUpdate, currentPost.id)
 }
 
+/**
+ * Sends PUT request to database to update a post with the 
+ * contents of the editor.
+ * @param {Object} event 
+ */
 function handleUpdate(event) {
-    // console.log('in handUpdate,', event.target.id);
-    const nTitle = document.getElementById('edit-title')
-    // const nBody = document.getElementById('blog-body-edit')
-    const nContent = editQuill.getContents()
-    const nBody = document.getElementById('edit-editor')
-
+    const editedTitle = document.getElementById('edit-title')
+    const editedContent = editQuill.getContents()
     axios({
         method: "PUT",
         url: `/blog/${event.target.param}`,
         data: {
-            title: nTitle.value,
+            title: editedTitle.value,
             body: editQuill.root.innerHTML,
-            delta: nContent
+            delta: editedContent
         }
     }).then((response) => {
         handleGetActivePost(event.target.param)
@@ -195,7 +199,6 @@ function handleUpdate(event) {
     }).catch((err) => {
         console.log(err);
     })
-
 }
 
 // ! State
