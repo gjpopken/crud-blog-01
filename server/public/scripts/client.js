@@ -1,5 +1,6 @@
 // TODO for next time :
 // //finish refactoring renderFeaturedPost, this is why the app is breaking.
+// refactor handleCharCount for disabling buttons
 
 function onStart() {
     // GETs and Renders post list to DOM
@@ -21,7 +22,7 @@ function handleWriteBtn() {
     <input required type="text" class="form-control mb-5" id="add-title" placeholder="Enter Blog Title" name="add-title">
     <label for="editor" class="form-label">New Post</label>
     <div id="editor"></div>
-    <p id="chars"></p>
+    <p id="char-count-container"></p>
     <button id="subbtn" type="submit" class="btn btn-outline-success">Post</button>
   </form>`
     if (writeMode === false) {
@@ -42,50 +43,41 @@ function handleWriteBtn() {
             placeholder: "Enter your thoughts . . . ☁️"
         });
 
-        // Adds listener for edit to update a typecount. 
-        // quill.on('editor-change', handleNumberOfChars)
-        handleNumberOfChars(quill, 'chars', 'subbtn')
+        // Handles the updating of the char count in the editor. 
+        handleNumberOfChars(quill, 'char-count-container', 'subbtn')
     }
 }
-// id names: 'chars', 'subbtn'
+/**
+ * Tracks the number of characters to keep it within bounds. 
+ * @param {object} quillObj the Quill editor object
+ * @param {string} containerId id of a container for the charcount to go.
+ * @param {string} btnId id of the button that should disable if there are too many characters.
+ */
 function handleNumberOfChars(quillObj, containerId, btnId) {
-    console.log('in handle number chars');
     quillObj.on('editor-change', () => {
         let charCount = quillObj.getLength()
-        const conainter = document.getElementById(containerId)
-        const btn = document.getElementById(btnId)
-        conainter.innerText = charCount
+        const container = document.getElementById(containerId)
+        container.innerText = charCount
         if (charCount >= 1500) {
-            conainter.classList.add('red')
-            btn.setAttribute('disabled', true)
+            container.classList.add('red')
+            disableButton(btnId)
         } else {
-            conainter.classList.remove('red')
-            btn.removeAttribute('disabled')
+            container.classList.remove('red')
+            reactivateButton(btnId)
         }
     })
 }
-// TODO Make this and the other number of Chars one function
-function handleNumberOfCharsEdit() {
-    console.log('in handle number of chars edit');
-    let charCount = editQuill.getLength()
-    const pChar = document.getElementById('edit-char-count')
-    pChar.innerText = charCount
-    const btn = document.getElementById('update-btn')
-    if (charCount >= 1500) {
-        pChar.classList.add('red')
-        btn.setAttribute('disabled', true)
-    } else {
-        pChar.classList.remove('red')
-        btn.removeAttribute('disabled')
-    }
-}
 
+/**
+ * Handles the Discard Button in the Cancelling Post Modal.
+ */
 function handleDiscardPost() {
     let btn = document.getElementById('write-btn')
     const container = document.getElementById('new-blog-container')
     if (writeMode === true) {
         writeMode = false
         container.innerHTML = ''
+        // Resets the Write Button so it doesn't trigger a modal. 
         btn.innerText = 'Write'
         btn.classList.remove('btn-outline-danger')
         btn.classList.add('btn-outline-success')
