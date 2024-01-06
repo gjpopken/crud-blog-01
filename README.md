@@ -10,6 +10,8 @@ Mini Blogr is a simple web app designed for creating and managing blog posts. It
 
 To use this web app:
 
+1. Go to the [Heroku site](https://hidden-dusk-17640-780a57c1f473.herokuapp.com/)
+
 1. Clone this repository to your local machine.
 2. Install the necessary dependencies by running `npm install`.
 3. Run the server using `npm run server` to start the Mini Blogr app.
