@@ -72,58 +72,50 @@ function handleNumberOfChars(quillObj, containerId, btnId) {
  * Handles the Discard Button in the Cancelling Post Modal.
  */
 function handleDiscardPost() {
-    let btn = document.getElementById('write-btn')
-    const container = document.getElementById('new-blog-container')
-    if (writeMode === true) {
-        writeMode = false
-        container.innerHTML = ''
-        // Resets the Write Button so it doesn't trigger a modal. 
-        btn.innerText = 'Write'
-        btn.classList.remove('btn-outline-danger')
-        btn.classList.add('btn-outline-success')
-        btn.setAttribute('data-bs-toggle', '')
-        btn.setAttribute('data-bs-target', '')
-    }
+    exitWriteMode()
 }
 
+/**
+ * Handles POSTing to the server
+ * @param {object} event 
+ */
 function handleNewPost(event) {
     event.preventDefault()
-    const nTitle = document.getElementById('add-title')
-    const nBody = document.getElementById('editor')
-    let btn = document.getElementById('write-btn')
-    const container = document.getElementById('new-blog-container')
-
+    const blogTitle = document.getElementById('add-title')
     // This gets the content of the editor with all its formatting information, both as raw HTML and as the Delta object so that I can use it to edit later.
     const content = quill.root.innerHTML
     const delta = quill.getContents()
-
-
 
     axios({
         method: "POST",
         url: '/blog',
         data: {
-            title: nTitle.value,
+            title: blogTitle.value,
             body: content,
             delta: delta
         }
     }).then((response) => {
-        // console.log('successfully POSTed');
-        nTitle.value = ''
-        nBody.value = ''
-        writeMode = false
-        container.innerHTML = ''
-        btn.innerText = 'Write'
-        btn.classList.remove('btn-outline-danger')
-        btn.classList.add('btn-outline-success')
-        btn.setAttribute('data-bs-toggle', '')
-        btn.setAttribute('data-bs-target', '')
+        exitWriteMode()
         getPostList()
         getFeatured()
     }).catch((err) => {
         console.log(err);
-        alert('Your post is too long, sorry!')
     })
+}
+
+/**
+ * Switches user out of write mode back to the normal display.
+ */
+function exitWriteMode() {
+    let btn = document.getElementById('write-btn')
+    const container = document.getElementById('new-blog-container')
+    writeMode = false
+    container.innerHTML = ''
+    btn.innerText = 'Write'
+    btn.classList.remove('btn-outline-danger')
+    btn.classList.add('btn-outline-success')
+    btn.setAttribute('data-bs-toggle', '')
+    btn.setAttribute('data-bs-target', '')
 }
 
 function handleShowPost(id) {
