@@ -43,29 +43,30 @@ function handleWriteBtn() {
         });
 
         // Adds listener for edit to update a typecount. 
-        quill.on('editor-change', handleNumberOfChars)
+        // quill.on('editor-change', handleNumberOfChars)
+        handleNumberOfChars(quill, 'chars', 'subbtn')
     }
 }
 // id names: 'chars', 'subbtn'
-function handleNumberOfChars(event, source) {
-    // console.log(event, source);
-    // console.log(quillObj, containerId, btnId);
-
-    let charCount = quill.getLength()
-    console.log(charCount);
-    const chars = document.getElementById('chars')
-    const btn = document.getElementById('subbtn')
-    chars.innerText = charCount
-    if (charCount >= 1500) {
-        chars.classList.add('red')
-        btn.setAttribute('disabled', true)
-    } else {
-        chars.classList.remove('red')
-        btn.removeAttribute('disabled')
-    }
+function handleNumberOfChars(quillObj, containerId, btnId) {
+    console.log('in handle number chars');
+    quillObj.on('editor-change', () => {
+        let charCount = quillObj.getLength()
+        const conainter = document.getElementById(containerId)
+        const btn = document.getElementById(btnId)
+        conainter.innerText = charCount
+        if (charCount >= 1500) {
+            conainter.classList.add('red')
+            btn.setAttribute('disabled', true)
+        } else {
+            conainter.classList.remove('red')
+            btn.removeAttribute('disabled')
+        }
+    })
 }
 // TODO Make this and the other number of Chars one function
 function handleNumberOfCharsEdit() {
+    console.log('in handle number of chars edit');
     let charCount = editQuill.getLength()
     const pChar = document.getElementById('edit-char-count')
     pChar.innerText = charCount
@@ -170,7 +171,8 @@ function handleDelete(event) {
 function handleEdit() {
     // This set the contents of the editor, and has to be parse from when it comes back from the DB
     editQuill.setContents(JSON.parse(currentPost.delta).ops)
-    editQuill.on('text-change', handleNumberOfCharsEdit)
+    // editQuill.on('text-change', handleNumberOfCharsEdit)
+    handleNumberOfChars(editQuill, 'edit-char-count', 'update-btn')
 
     const editTitle = document.getElementById('edit-title')
     editTitle.value = currentPost.title
