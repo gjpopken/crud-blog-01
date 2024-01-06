@@ -60,3 +60,19 @@ function renderNoFeatured() {
     disableButton('delete-btn')
     disableButton('edit-btn')
 }
+
+/**
+ * Renders an active post to the DOM.
+ * @param {Object} response response object from GET request.
+ */
+function renderActivePost(response) {
+    const showing = document.getElementById('showing')
+    const container = document.getElementById('current-post')
+    setCurrentPost(response.data[0])
+    showing.innerText = currentPost.updated_at
+    container.innerHTML = `
+        <h2 id="current-post-title">${currentPost.title}</h2>
+        <p id="current-post-body">${currentPost.body}</p>
+        `
+    reactivateButton('delete-btn', handleDelete, currentPost.id)
+}

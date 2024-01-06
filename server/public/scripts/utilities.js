@@ -33,3 +33,18 @@ function reactivateButton(id, callbackFn, param) {
         btn.param = param
     }
 }
+
+/**
+ * Switches user out of write mode back to the normal display.
+ */
+function exitWriteMode() {
+    let btn = document.getElementById('write-btn')
+    const container = document.getElementById('new-blog-container')
+    writeMode = false
+    container.innerHTML = ''
+    btn.innerText = 'Write'
+    btn.classList.remove('btn-outline-danger')
+    btn.classList.add('btn-outline-success')
+    btn.setAttribute('data-bs-toggle', '')
+    btn.setAttribute('data-bs-target', '')
+}
