@@ -1,9 +1,3 @@
-// TODO for next time :
-// Move functions to new files.
-// //finish refactoring renderFeaturedPost, this is why the app is breaking.
-// //refactor handleCharCount for disabling buttons
-
-
 function onStart() {
     // GETs and Renders post list to DOM
     getPostList()

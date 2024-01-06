@@ -1,6 +1,6 @@
 # Mini Blogr Web App
 
-![a screenshot of the app](app.png)
+![a screenshot of the app](app2.png)
 
 ## Overview
 
@@ -27,5 +27,10 @@ To use this web app:
 - `styles/style.css`: CSS file for styling the web app.
 - `scripts/axios.js`: Axios library for handling HTTP requests.
 - `scripts/client.js`: Client-side JavaScript file for handling app functionality.
-- External Libraries:
-  - Bootstrap: Used for styling and modal functionalities.
+- **Rich Text Editor:** Utilizes Quill.js for a dynamic and user-friendly writing experience.
+
+## External Libraries
+
+- Bootstrap: Used for styling and modal functionalities.
+- Quill.js: Integrated for a feature-rich and customizable rich text editor.
+
